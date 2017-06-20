@@ -44,5 +44,12 @@ func (r *Repository) Update() (bool, error) {
 		return false, errors.New("no entries in info")
 	}
 
-	return info.Entries[0].Revision > r.Revision, nil
+	revision := info.Entries[0].Revision
+
+	if revision > r.Revision {
+		r.Revision = revision
+		return true, nil
+	}
+
+	return false, nil
 }
