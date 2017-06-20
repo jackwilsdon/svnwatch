@@ -19,6 +19,7 @@ type Watch struct {
 
 func (w Watch) Update(repositories *Repositories) error {
 	repo := repositories.ForURL(w.URL)
+
 	updated, err := repo.Update()
 
 	if err != nil {
