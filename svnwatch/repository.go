@@ -29,8 +29,8 @@ func (r *Repositories) ForURL(url string) *Repository {
 
 type Repository struct {
 	XMLName  xml.Name `xml:"repository"`
-	Revision int      `xml:",chardata"`
 	URL      string   `xml:"url,attr"`
+	Revision int      `xml:",chardata"`
 }
 
 func (r *Repository) Update() (bool, error) {
