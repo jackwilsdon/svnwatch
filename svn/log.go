@@ -20,7 +20,7 @@ type LogEntry struct {
 func GetLog(address string) (*Log, error) {
 	log := Log{}
 
-	if err := Run(&log, "svn", "log", "--xml", address); err != nil {
+	if err := Execute(&log, "log", "--xml", address); err != nil {
 		return nil, errors.Wrapf(err, "failed to get log for %s", address)
 	}
 

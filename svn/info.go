@@ -25,7 +25,7 @@ type InfoEntry struct {
 func GetInfo(address string) (*Info, error) {
 	info := Info{}
 
-	if err := Run(&info, "svn", "info", "--xml", address); err != nil {
+	if err := Execute(&info, "info", "--xml", address); err != nil {
 		return nil, errors.Wrapf(err, "failed to get info for %s", address)
 	}
 
