@@ -3,8 +3,8 @@ package svnwatch
 import "encoding/xml"
 
 type Watches struct {
-	XMLName xml.Name  `xml:"watches"`
-	Watches []Watches `xml:"watch"`
+	XMLName xml.Name `xml:"watches"`
+	Watches []Watch  `xml:"watch"`
 }
 
 type Watch struct {
