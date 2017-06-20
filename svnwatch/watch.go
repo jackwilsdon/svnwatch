@@ -12,12 +12,13 @@ type Watches struct {
 }
 
 type Watch struct {
-	XMLName    xml.Name  `xml:"watch"`
-	Repository string    `xml:"repository"`
-	Commands   []Command `xml:"command"`
+	XMLName  xml.Name  `xml:"watch"`
+	URL      string    `xml:"url,attr"`
+	Commands []Command `xml:"command"`
 }
 
-func (w *Watch) Update(repo *Repository) (bool, error) {
+func (w Watch) Update(repositories *Repositories) error {
+	repo := repositories.ForURL(w.URL)
 	updated, err := repo.Update()
 
 	if err != nil {
@@ -26,11 +27,11 @@ func (w *Watch) Update(repo *Repository) (bool, error) {
 
 	if updated {
 		for _, cmd := range w.Commands {
-			if cmd.Type == "revision" {
-				cmd.Execute(repo)
+			if err := cmd.Execute(*repo); err != nil {
+				return errors.Wrapf(err, "failed to execute command")
 			}
 		}
 	}
 
-	return updated, nil
+	return nil
 }

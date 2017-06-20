@@ -5,30 +5,34 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+
+	shellwords "github.com/mattn/go-shellwords"
+	"github.com/pkg/errors"
 )
 
 type Command struct {
 	XMLName xml.Name `xml:"command"`
-	Type    string   `xml:"type,attr"`
 	Command string   `xml:",chardata"`
 }
 
-func (c *Command) Execute(repo *Repository) error {
-	cmd := exec.Command(c.Command)
+func (c Command) Execute(repo Repository) error {
+	pieces, err := shellwords.Parse(c.Command)
+
+	if err != nil {
+		return errors.Wrapf(err, "failed to parse %s", c.Command)
+	}
+
+	cmd := exec.Command(pieces[0], pieces[1:]...)
 	cmd.Env = os.Environ()
 
-	if c.Type == "revision" {
-		cmd.Env = append(
-			cmd.Env,
-			fmt.Sprintf("SVN_REVISION=%d", repo.Revision),
-			fmt.Sprintf("SVN_URL=%s", repo.URL),
-		)
+	cmd.Env = append(
+		os.Environ(),
+		fmt.Sprintf("SVN_URL=%s", repo.URL),
+		fmt.Sprintf("SVN_REVISION=%d", repo.Revision),
+	)
 
-		if err, ok := cmd.Run().(*exec.ExitError); ok {
-			return err
-		}
-	} else {
-		return fmt.Errorf("invalid type: %s", c.Type)
+	if err := cmd.Run(); err != nil {
+		return errors.Wrapf(err, "failed to execute %s", c.Command)
 	}
 
 	return nil
