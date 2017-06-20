@@ -1,6 +1,10 @@
 package svnwatch
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+
+	"github.com/pkg/errors"
+)
 
 type Watches struct {
 	XMLName xml.Name `xml:"watches"`
@@ -17,7 +21,7 @@ func (w *Watch) Update(repo *Repository) (bool, error) {
 	updated, err := repo.Update()
 
 	if err != nil {
-		return false, err
+		return errors.Wrapf(err, "failed to update watch for %s", w.URL)
 	}
 
 	if updated {

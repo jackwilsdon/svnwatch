@@ -2,9 +2,9 @@ package svnwatch
 
 import (
 	"encoding/xml"
-	"errors"
 
 	"github.com/jackwilsdon/svnwatch/svn"
+	"github.com/pkg/errors"
 )
 
 type Repositories struct {
@@ -37,7 +37,7 @@ func (r *Repository) Update() (bool, error) {
 	info, err := svn.GetInfo(r.URL)
 
 	if err != nil {
-		return false, err
+		return false, errors.Wrapf(err, "failed to update %s", r.URL)
 	}
 
 	if len(info.Entries) == 0 {
