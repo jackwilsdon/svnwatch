@@ -1,6 +1,10 @@
 package svn
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+
+	"github.com/pkg/errors"
+)
 
 type Info struct {
 	XMLName xml.Name    `xml:"info"`
@@ -22,7 +26,7 @@ func GetInfo(address string) (*Info, error) {
 	info := Info{}
 
 	if err := Run(&info, "svn", "info", "--xml", address); err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "failed to get info for %s", address)
 	}
 
 	return &info, nil

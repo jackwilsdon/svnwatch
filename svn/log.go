@@ -1,6 +1,10 @@
 package svn
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+
+	"github.com/pkg/errors"
+)
 
 type Log struct {
 	XMLName xml.Name   `xml:"log"`
@@ -17,7 +21,7 @@ func GetLog(address string) (*Log, error) {
 	log := Log{}
 
 	if err := Run(&log, "svn", "log", "--xml", address); err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "failed to get log for %s", address)
 	}
 
 	return &log, nil
