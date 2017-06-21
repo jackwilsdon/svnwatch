@@ -14,13 +14,8 @@ type Log struct {
 type LogEntry struct {
 	*Commit
 	XMLName xml.Name `xml:"logentry"`
-	Paths   Paths    `xml:"paths"`
+	Paths   []Path   `xml:"paths>path"`
 	Message string   `xml:"msg"`
-}
-
-type Paths struct {
-	XMLName xml.Name `xml:"paths"`
-	Paths   []Path   `xml:"path"`
 }
 
 type Path struct {
