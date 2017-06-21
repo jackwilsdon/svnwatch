@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"os"
 	"time"
-
-	"github.com/davecgh/go-spew/spew"
 )
 
 func main() {
@@ -26,8 +24,6 @@ func main() {
 		fmt.Fprint(os.Stderr, err)
 		os.Exit(1)
 	}
-
-	spew.Dump(watcher.Repositories)
 
 	for {
 		if err := watcher.Update(); err != nil {
