@@ -7,6 +7,11 @@ import (
 	"time"
 )
 
+func fatalf(format interface{}, a ...interface{}) {
+	fmt.Fprintf(os.Stderr, "%s: %s", os.Args[0], fmt.Sprintf(fmt.Sprint(format), a...))
+	os.Exit(1)
+}
+
 func main() {
 	configDir := flag.String("config", "~/.svnwatch", "the configuration directory for svnwatch")
 	interval := flag.Int("interval", 0, "how often to check for updates (0 disables this and exists after a single check)")
@@ -16,19 +21,16 @@ func main() {
 	watcher, err := LoadWatcher(*configDir)
 
 	if *interval < 0 {
-		fmt.Fprintf(os.Stderr, "%s: invalid interval: %d", os.Args[0], *interval)
-		os.Exit(1)
+		fatalf("%s: invalid interval: %d", os.Args[0], *interval)
 	}
 
 	if err != nil {
-		fmt.Fprint(os.Stderr, err)
-		os.Exit(1)
+		fatalf(err)
 	}
 
 	for {
 		if err := watcher.Update(); err != nil {
-			fmt.Fprint(os.Stderr, err)
-			os.Exit(1)
+			fatalf(err)
 		}
 
 		watcher.Save("./config")
