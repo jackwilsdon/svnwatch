@@ -8,7 +8,7 @@ import (
 )
 
 func fatalf(format interface{}, a ...interface{}) {
-	fmt.Fprintf(os.Stderr, "%s: %s", os.Args[0], fmt.Sprintf(fmt.Sprint(format), a...))
+	fmt.Fprintf(os.Stderr, "%s: %s\n", os.Args[0], fmt.Sprintf(fmt.Sprint(format), a...))
 	os.Exit(1)
 }
 
