@@ -13,7 +13,7 @@ func fatalf(format interface{}, a ...interface{}) {
 }
 
 func main() {
-	configDir := flag.String("config", "~/.svnwatch", "the configuration directory for svnwatch")
+	configDir := flag.String("config", "/etc/svnwatch", "the configuration directory for svnwatch")
 	interval := flag.Int("interval", 0, "how often to check for updates (0 disables this and exists after a single check)")
 
 	flag.Parse()
