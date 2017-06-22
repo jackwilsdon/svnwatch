@@ -53,3 +53,21 @@ func (r *Repository) Update() (bool, error) {
 
 	return false, nil
 }
+
+func (r *Repository) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+	repo := struct {
+		URL *string `xml:"url,attr"`
+	}{}
+
+	if err := d.DecodeElement(&repo, &start); err != nil {
+		return err
+	}
+
+	if repo.URL == nil {
+		return errors.New("missing URL from watch")
+	}
+
+	r.URL = *repo.URL
+
+	return nil
+}
