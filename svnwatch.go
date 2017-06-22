@@ -33,7 +33,9 @@ func main() {
 			fatalf(err)
 		}
 
-		watcher.Save("./config")
+		if err := watcher.Save(*configDir); err != nil {
+			fatalf(err)
+		}
 
 		if *interval > 0 {
 			time.Sleep(time.Duration(*interval) * time.Second)
