@@ -50,5 +50,7 @@ func (w *Watch) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 		return errors.New("missing URL from watch")
 	}
 
+	w.URL = *watch.URL
+
 	return nil
 }
