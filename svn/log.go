@@ -26,6 +26,7 @@ type Path struct {
 	CopyFromRevision      *int     `xml:"copyfrom-rev,attr,omitempty"`
 	Action                string   `xml:"action,attr"`
 	PropertyModifications bool     `xml:"prop-mods,attr"`
+	Name                  string   `xml:",chardata"`
 }
 
 func GetLog(address string) (*Log, error) {
