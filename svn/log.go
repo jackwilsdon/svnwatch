@@ -56,7 +56,7 @@ func GetLogRange(address string, start int, end *int) ([]Revision, error) {
 	}
 
 	if err := Execute(&log, "log", "--xml", "--verbose", "--revision", revision, address); err != nil {
-		return nil, errors.Wrapf(err, "failed to get log for %s (revision %d)", address, revision)
+		return nil, errors.Wrapf(err, "failed to get log for %s (revision %s)", address, revision)
 	}
 
 	return log.Revisions, nil
