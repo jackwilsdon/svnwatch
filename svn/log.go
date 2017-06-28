@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/pkg/errors"
 )
@@ -14,10 +15,12 @@ type log struct {
 }
 
 type Revision struct {
-	*Commit
-	XMLName xml.Name `xml:"logentry"`
-	Paths   []Path   `xml:"paths>path"`
-	Message string   `xml:"msg"`
+	Revision int       `xml:"revision,attr"`
+	Author   string    `xml:"author"`
+	Date     time.Time `xml:"date"`
+	XMLName  xml.Name  `xml:"logentry"`
+	Paths    []Path    `xml:"paths>path"`
+	Message  string    `xml:"msg"`
 }
 
 type Path struct {
