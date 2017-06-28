@@ -72,3 +72,17 @@ func GetRevision(address string, revision int) (*Revision, error) {
 
 	return &log.Revisions[0], nil
 }
+
+func GetLatestRevision(address string) (*Revision, error) {
+	log := Log{}
+
+	if err := Execute(&log, "log", "--xml", "--verbose", "--limit", "1", address); err != nil {
+		return nil, errors.Wrapf(err, "failed to get log for %s", address)
+	}
+
+	if len(log.Revisions) != 1 {
+		return nil, fmt.Errorf("found %d log entries but expected 1 for %s", len(log.Revisions), address)
+	}
+
+	return &log.Revisions[0], nil
+}
