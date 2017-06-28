@@ -7,6 +7,7 @@ import (
 	"os/exec"
 	"strconv"
 
+	"github.com/jackwilsdon/svnwatch/svn"
 	shellwords "github.com/mattn/go-shellwords"
 	"github.com/pkg/errors"
 )
@@ -17,7 +18,7 @@ type Command struct {
 	Command      string   `xml:",chardata"`
 }
 
-func (c Command) Execute(repo Repository) error {
+func (c Command) Execute(repo Repository, revision svn.Revision) error {
 	pieces, err := shellwords.Parse(c.Command)
 
 	if err != nil {

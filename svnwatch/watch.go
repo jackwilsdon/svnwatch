@@ -20,15 +20,15 @@ type Watch struct {
 func (w Watch) Update(repositories *Repositories) error {
 	repo := repositories.ForURL(w.URL)
 
-	updated, err := repo.Update()
+	revisions, err := repo.Update()
 
 	if err != nil {
 		return errors.Wrapf(err, "failed to update repository for %s", w.URL)
 	}
 
-	if updated {
+	for _, revision := range revisions {
 		for _, cmd := range w.Commands {
-			if err := cmd.Execute(*repo); err != nil {
+			if err := cmd.Execute(*repo, revision); err != nil {
 				return errors.Wrapf(err, "failed to execute command")
 			}
 		}

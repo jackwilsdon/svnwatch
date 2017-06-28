@@ -33,19 +33,27 @@ type Repository struct {
 	Revision int      `xml:",chardata"`
 }
 
-func (r *Repository) Update() (bool, error) {
-	revision, err := svn.GetLatestRevision(r.URL)
+func (r *Repository) Update() ([]svn.Revision, error) {
+	revisions, err := svn.GetLogRange(r.URL, r.Revision+1, nil)
 
 	if err != nil {
-		return false, errors.Wrapf(err, "failed to get latest revision for %s", r.URL)
+		return nil, errors.Wrapf(err, "failed to get log range for %s (range %d:HEAD)", r.URL, r.Revision)
 	}
 
-	if revision.Revision > r.Revision {
-		r.Revision = revision.Revision
-		return true, nil
+	originalRevision := r.Revision
+
+	for _, revision := range revisions {
+		if revision.Revision > r.Revision {
+			r.Revision = revision.Revision
+		}
 	}
 
-	return false, nil
+	// If it's our first update /or/ the revision hasn't changed then return nothing
+	if originalRevision == 0 || r.Revision == originalRevision {
+		return nil, nil
+	}
+
+	return revisions, nil
 }
 
 func (r *Repository) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
