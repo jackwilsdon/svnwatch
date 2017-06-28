@@ -23,7 +23,7 @@ func (w Watch) Update(repositories *Repositories) error {
 	updated, err := repo.Update()
 
 	if err != nil {
-		return errors.Wrapf(err, "failed to update watch for %s", w.URL)
+		return errors.Wrapf(err, "failed to update repository for %s", w.URL)
 	}
 
 	if updated {

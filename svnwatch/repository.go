@@ -37,7 +37,7 @@ func (r *Repository) Update() (bool, error) {
 	revision, err := svn.GetLatestRevision(r.URL)
 
 	if err != nil {
-		return false, errors.Wrapf(err, "failed to update %s", r.URL)
+		return false, errors.Wrapf(err, "failed to get latest revision for %s", r.URL)
 	}
 
 	if revision.Revision > r.Revision {
