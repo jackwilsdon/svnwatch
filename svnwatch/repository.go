@@ -50,7 +50,8 @@ func (r *Repository) Update() (bool, error) {
 
 func (r *Repository) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	repo := struct {
-		URL *string `xml:"url,attr"`
+		URL      *string `xml:"url,attr"`
+		Revision *int    `xml:",chardata"`
 	}{}
 
 	if err := d.DecodeElement(&repo, &start); err != nil {
@@ -61,7 +62,12 @@ func (r *Repository) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error 
 		return errors.New("missing URL from repository")
 	}
 
+	if repo.Revision == nil {
+		return errors.New("missing revision from repository")
+	}
+
 	r.URL = *repo.URL
+	r.Revision = *repo.Revision
 
 	return nil
 }
