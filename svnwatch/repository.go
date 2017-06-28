@@ -34,8 +34,7 @@ type Repository struct {
 }
 
 func (r *Repository) Update() ([]svn.Revision, error) {
-	// We use the next revision so that we don't end up fetching the current revision too
-	revisions, err := svn.GetLogRange(r.URL, r.Revision+1, nil)
+	revisions, err := svn.GetLogRange(r.URL, r.Revision, nil)
 
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to get log range for %s (range %d:HEAD)", r.URL, r.Revision)
@@ -54,7 +53,8 @@ func (r *Repository) Update() ([]svn.Revision, error) {
 		return nil, nil
 	}
 
-	return revisions, nil
+	// Return everything but the first revision, as that is the revision we passed to GetLogRange
+	return revisions[1:], nil
 }
 
 func (r *Repository) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
