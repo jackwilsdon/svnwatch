@@ -58,7 +58,7 @@ func (r *Repository) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error 
 	}
 
 	if repo.URL == nil {
-		return errors.New("missing URL from watch")
+		return errors.New("missing URL from repository")
 	}
 
 	r.URL = *repo.URL
