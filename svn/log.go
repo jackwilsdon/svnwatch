@@ -31,6 +31,34 @@ type Path struct {
 	Name                  string   `xml:",chardata"`
 }
 
+func GetLog(address string) (*Log, error) {
+	log := Log{}
+
+	if err := Execute(&log, "log", "--xml", "--verbose", address); err != nil {
+		return nil, errors.Wrapf(err, "failed to get log for %s", address)
+	}
+
+	return &log, nil
+}
+
+func GetLogRange(address string, start int, end *int) (*Log, error) {
+	log := Log{}
+
+	revision := strconv.Itoa(start) + ":"
+
+	if end == nil {
+		revision += "HEAD"
+	} else {
+		revision += strconv.Itoa(*end)
+	}
+
+	if err := Execute(&log, "log", "--xml", "--verbose", "--revision", revision, address); err != nil {
+		return nil, errors.Wrapf(err, "failed to get log for %s (revision %d)", address, revision)
+	}
+
+	return &log, nil
+}
+
 func GetRevision(address string, revision int) (*Revision, error) {
 	log := Log{}
 
@@ -43,14 +71,4 @@ func GetRevision(address string, revision int) (*Revision, error) {
 	}
 
 	return &log.Revisions[0], nil
-}
-
-func GetLog(address string) (*Log, error) {
-	log := Log{}
-
-	if err := Execute(&log, "log", "--xml", "--verbose", address); err != nil {
-		return nil, errors.Wrapf(err, "failed to get log for %s", address)
-	}
-
-	return &log, nil
 }
