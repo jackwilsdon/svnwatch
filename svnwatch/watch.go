@@ -39,7 +39,8 @@ func (w Watch) Update(repositories *Repositories) error {
 
 func (w *Watch) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	watch := struct {
-		URL *string `xml:"url,attr"`
+		URL      *string   `xml:"url,attr"`
+		Commands []Command `xml:"command"`
 	}{}
 
 	if err := d.DecodeElement(&watch, &start); err != nil {
@@ -51,6 +52,7 @@ func (w *Watch) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	}
 
 	w.URL = *watch.URL
+	w.Commands = watch.Commands
 
 	return nil
 }
