@@ -34,6 +34,7 @@ type Repository struct {
 }
 
 func (r *Repository) Update() ([]svn.Revision, error) {
+	// We use the next revision so that we don't end up fetching the current revision too
 	revisions, err := svn.GetLogRange(r.URL, r.Revision+1, nil)
 
 	if err != nil {
