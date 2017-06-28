@@ -8,7 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-type Log struct {
+type log struct {
 	XMLName   xml.Name   `xml:"log"`
 	Revisions []Revision `xml:"logentry"`
 }
@@ -31,18 +31,18 @@ type Path struct {
 	Name                  string   `xml:",chardata"`
 }
 
-func GetLog(address string) (*Log, error) {
-	log := Log{}
+func GetLog(address string) ([]Revision, error) {
+	log := log{}
 
 	if err := Execute(&log, "log", "--xml", "--verbose", address); err != nil {
 		return nil, errors.Wrapf(err, "failed to get log for %s", address)
 	}
 
-	return &log, nil
+	return log.Revisions, nil
 }
 
-func GetLogRange(address string, start int, end *int) (*Log, error) {
-	log := Log{}
+func GetLogRange(address string, start int, end *int) ([]Revision, error) {
+	log := log{}
 
 	revision := strconv.Itoa(start) + ":"
 
@@ -56,11 +56,11 @@ func GetLogRange(address string, start int, end *int) (*Log, error) {
 		return nil, errors.Wrapf(err, "failed to get log for %s (revision %d)", address, revision)
 	}
 
-	return &log, nil
+	return log.Revisions, nil
 }
 
 func GetRevision(address string, revision int) (*Revision, error) {
-	log := Log{}
+	log := log{}
 
 	if err := Execute(&log, "log", "--xml", "--verbose", "--revision", strconv.Itoa(revision), address); err != nil {
 		return nil, errors.Wrapf(err, "failed to get log for %s (revision %d)", address, revision)
@@ -74,7 +74,7 @@ func GetRevision(address string, revision int) (*Revision, error) {
 }
 
 func GetLatestRevision(address string) (*Revision, error) {
-	log := Log{}
+	log := log{}
 
 	if err := Execute(&log, "log", "--xml", "--verbose", "--limit", "1", address); err != nil {
 		return nil, errors.Wrapf(err, "failed to get log for %s", address)
