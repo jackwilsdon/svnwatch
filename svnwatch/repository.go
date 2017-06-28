@@ -34,20 +34,14 @@ type Repository struct {
 }
 
 func (r *Repository) Update() (bool, error) {
-	info, err := svn.GetInfo(r.URL)
+	revision, err := svn.GetLatestRevision(r.URL)
 
 	if err != nil {
 		return false, errors.Wrapf(err, "failed to update %s", r.URL)
 	}
 
-	if len(info.Entries) == 0 {
-		return false, errors.New("no entries in info")
-	}
-
-	revision := info.Entries[0].Revision
-
-	if revision > r.Revision {
-		r.Revision = revision
+	if revision.Revision > r.Revision {
+		r.Revision = revision.Revision
 		return true, nil
 	}
 
