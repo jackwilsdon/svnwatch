@@ -9,11 +9,11 @@ import (
 )
 
 type Log struct {
-	XMLName xml.Name   `xml:"log"`
-	Entries []LogEntry `xml:"logentry"`
+	XMLName   xml.Name   `xml:"log"`
+	Revisions []Revision `xml:"logentry"`
 }
 
-type LogEntry struct {
+type Revision struct {
 	*Commit
 	XMLName xml.Name `xml:"logentry"`
 	Paths   []Path   `xml:"paths>path"`
@@ -31,18 +31,18 @@ type Path struct {
 	Name                  string   `xml:",chardata"`
 }
 
-func GetRevision(address string, revision int) (*LogEntry, error) {
+func GetRevision(address string, revision int) (*Revision, error) {
 	log := Log{}
 
 	if err := Execute(&log, "log", "--xml", "--verbose", "--revision", strconv.Itoa(revision), address); err != nil {
 		return nil, errors.Wrapf(err, "failed to get log for %s (revision %d)", address, revision)
 	}
 
-	if len(log.Entries) != 1 {
-		return nil, fmt.Errorf("found %d log entries but expected 1 for %s (revison %d)", len(log.Entries), address, revision)
+	if len(log.Revisions) != 1 {
+		return nil, fmt.Errorf("found %d log entries but expected 1 for %s (revison %d)", len(log.Revisions), address, revision)
 	}
 
-	return &log.Entries[0], nil
+	return &log.Revisions[0], nil
 }
 
 func GetLog(address string) (*Log, error) {
