@@ -22,7 +22,7 @@ func (c Command) Execute(repo Repository, revision svn.Revision) error {
 	pieces, err := shellwords.Parse(c.Command)
 
 	if err != nil {
-		return errors.Wrapf(err, "failed to parse %s", c.Command)
+		return errors.Wrapf(err, "failed to parse \"%s\"", c.Command)
 	}
 
 	cmd := exec.Command(pieces[0], pieces[1:]...)
@@ -37,11 +37,11 @@ func (c Command) Execute(repo Repository, revision svn.Revision) error {
 			fmt.Sprintf("SVN_REVISION=%d", repo.Revision),
 		)
 	} else {
-		return fmt.Errorf("invalid argument type %s for %s", *c.ArgumentType, c.Command)
+		return fmt.Errorf("invalid argument type \"%s\" for \"%s\"", *c.ArgumentType, c.Command)
 	}
 
 	if err := cmd.Run(); err != nil {
-		return errors.Wrapf(err, "failed to execute %s", c.Command)
+		return errors.Wrapf(err, "failed to execute \"%s\"", c.Command)
 	}
 
 	return nil
