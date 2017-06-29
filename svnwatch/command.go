@@ -25,6 +25,10 @@ func (c Command) Execute(repo Repository, revision svn.Revision) error {
 		return errors.Wrapf(err, "failed to parse \"%s\"", c.Command)
 	}
 
+	if len(pieces) == 0 {
+		return fmt.Errorf("failed to parse \"%s\"", c.Command)
+	}
+
 	cmd := exec.Command(pieces[0], pieces[1:]...)
 	cmd.Env = os.Environ()
 
