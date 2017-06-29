@@ -13,7 +13,7 @@ type Repositories struct {
 }
 
 func (r *Repositories) ForURL(url string) *Repository {
-	for i, _ := range r.Repositories {
+	for i := range r.Repositories {
 		if url == r.Repositories[i].URL {
 			return &r.Repositories[i]
 		}
