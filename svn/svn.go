@@ -8,7 +8,7 @@ import (
 )
 
 func Execute(v interface{}, arg ...string) error {
-	output, err := exec.Command("svn", arg...).Output()
+	output, err := exec.Command("svn", append([]string{"--xml"}, arg...)...).Output()
 
 	if err != nil {
 		return errors.Wrap(err, "failed to execute svn")

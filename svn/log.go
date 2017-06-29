@@ -37,7 +37,7 @@ type Path struct {
 func GetLog(address string) ([]Revision, error) {
 	log := log{}
 
-	if err := Execute(&log, "log", "--xml", "--verbose", address); err != nil {
+	if err := Execute(&log, "log", "--verbose", address); err != nil {
 		return nil, errors.Wrapf(err, "failed to get log for %s", address)
 	}
 
@@ -55,7 +55,7 @@ func GetLogRange(address string, start int, end *int) ([]Revision, error) {
 		revision += strconv.Itoa(*end)
 	}
 
-	if err := Execute(&log, "log", "--xml", "--verbose", "--revision", revision, address); err != nil {
+	if err := Execute(&log, "log", "--verbose", "--revision", revision, address); err != nil {
 		return nil, errors.Wrapf(err, "failed to get log for %s (revision %s)", address, revision)
 	}
 
@@ -65,7 +65,7 @@ func GetLogRange(address string, start int, end *int) ([]Revision, error) {
 func GetRevision(address string, revision int) (*Revision, error) {
 	log := log{}
 
-	if err := Execute(&log, "log", "--xml", "--verbose", "--revision", strconv.Itoa(revision), address); err != nil {
+	if err := Execute(&log, "log", "--verbose", "--revision", strconv.Itoa(revision), address); err != nil {
 		return nil, errors.Wrapf(err, "failed to get log for %s (revision %d)", address, revision)
 	}
 
@@ -79,7 +79,7 @@ func GetRevision(address string, revision int) (*Revision, error) {
 func GetLatestRevision(address string) (*Revision, error) {
 	log := log{}
 
-	if err := Execute(&log, "log", "--xml", "--verbose", "--limit", "1", address); err != nil {
+	if err := Execute(&log, "log", "--verbose", "--limit", "1", address); err != nil {
 		return nil, errors.Wrapf(err, "failed to get log for %s", address)
 	}
 
