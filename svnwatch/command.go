@@ -33,12 +33,12 @@ func (c Command) Execute(repo Repository, revision svn.Revision) error {
 	cmd.Env = os.Environ()
 
 	if c.ArgumentType == "normal" {
-		cmd.Args = append(cmd.Args, repo.URL, strconv.Itoa(repo.Revision))
+		cmd.Args = append(cmd.Args, repo.URL, strconv.Itoa(revision.Revision))
 	} else if c.ArgumentType == "env" {
 		cmd.Env = append(
 			os.Environ(),
 			fmt.Sprintf("SVN_URL=%s", repo.URL),
-			fmt.Sprintf("SVN_REVISION=%d", repo.Revision),
+			fmt.Sprintf("SVN_REVISION=%d", revision.Revision),
 		)
 	} else {
 		return fmt.Errorf("invalid argument type \"%s\" for \"%s\"", c.ArgumentType, c.Command)
