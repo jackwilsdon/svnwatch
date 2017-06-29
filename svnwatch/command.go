@@ -14,7 +14,7 @@ import (
 
 type Command struct {
 	XMLName      xml.Name `xml:"command"`
-	ArgumentType string   `xml:"pass-type,attr,omitempty"`
+	ArgumentType string   `xml:"argument-type,attr,omitempty"`
 	Command      string   `xml:",chardata"`
 }
 
@@ -49,7 +49,7 @@ func (c Command) Execute(repo Repository, revision svn.Revision) error {
 
 func (c *Command) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	cmd := struct {
-		ArgumentType *string `xml:"pass-type,attr,omitempty"`
+		ArgumentType *string `xml:"argument-type,attr,omitempty"`
 		Command      string  `xml:"chardata"`
 	}{}
 
