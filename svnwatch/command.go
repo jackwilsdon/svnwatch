@@ -54,7 +54,7 @@ func (c Command) Execute(repo Repository, revision svn.Revision) error {
 func (c *Command) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	cmd := struct {
 		ArgumentType *string `xml:"argument-type,attr,omitempty"`
-		Command      string  `xml:"chardata"`
+		Command      string  `xml:",chardata"`
 	}{}
 
 	if err := d.DecodeElement(&cmd, &start); err != nil {
