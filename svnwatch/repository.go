@@ -7,11 +7,14 @@ import (
 	"github.com/pkg/errors"
 )
 
+// Repositories represents a collection of Repository objects.
 type Repositories struct {
 	XMLName      xml.Name     `xml:"repositories"`
 	Repositories []Repository `xml:"repository"`
 }
 
+// ForURL returns the repository for the specified URL or creates one if it
+// did not already exist.
 func (r *Repositories) ForURL(url string) *Repository {
 	for i := range r.Repositories {
 		if url == r.Repositories[i].URL {
@@ -27,12 +30,14 @@ func (r *Repositories) ForURL(url string) *Repository {
 	return &r.Repositories[len(r.Repositories)-1]
 }
 
+// Repository represents the last known state of a repository.
 type Repository struct {
 	XMLName  xml.Name `xml:"repository"`
 	URL      string   `xml:"url,attr"`
 	Revision int      `xml:",chardata"`
 }
 
+// Update the repository and return any new revisions.
 func (r *Repository) Update() ([]svn.Revision, error) {
 	revisions, err := svn.GetLogRange(r.URL, r.Revision, nil)
 
@@ -57,6 +62,8 @@ func (r *Repository) Update() ([]svn.Revision, error) {
 	return revisions[1:], nil
 }
 
+// UnmarshalXML unmarshals the repository from XML whilst providing some extra
+// validation.
 func (r *Repository) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	repo := struct {
 		URL      *string `xml:"url,attr"`

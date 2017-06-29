@@ -14,6 +14,7 @@ type log struct {
 	Revisions []Revision `xml:"logentry"`
 }
 
+// A Revision is a revision in SVN.
 type Revision struct {
 	Revision int       `xml:"revision,attr"`
 	Author   string    `xml:"author"`
@@ -23,6 +24,7 @@ type Revision struct {
 	Message  string    `xml:"msg"`
 }
 
+// A Path is a record of a change made to a file in a revision.
 type Path struct {
 	XMLName               xml.Name `xml:"path"`
 	TextModifications     bool     `xml:"text-mods,attr"`
@@ -34,6 +36,7 @@ type Path struct {
 	Name                  string   `xml:",chardata"`
 }
 
+// GetLog returns all revisions for the specified address.
 func GetLog(address string) ([]Revision, error) {
 	log := log{}
 
@@ -44,6 +47,9 @@ func GetLog(address string) ([]Revision, error) {
 	return log.Revisions, nil
 }
 
+// GetLogRange returns all revisions within the specified range. If the end
+// revision is nil then all revisions after the specified start revision
+// will be returned (including the start revision itself).
 func GetLogRange(address string, start int, end *int) ([]Revision, error) {
 	log := log{}
 
@@ -62,6 +68,7 @@ func GetLogRange(address string, start int, end *int) ([]Revision, error) {
 	return log.Revisions, nil
 }
 
+// GetRevision returns the specified revision for the specified address.
 func GetRevision(address string, revision int) (*Revision, error) {
 	log := log{}
 
@@ -76,6 +83,7 @@ func GetRevision(address string, revision int) (*Revision, error) {
 	return &log.Revisions[0], nil
 }
 
+// GetLatestRevision returns the latest revision for the specified address.
 func GetLatestRevision(address string) (*Revision, error) {
 	log := log{}
 

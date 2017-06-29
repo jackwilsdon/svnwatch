@@ -6,17 +6,21 @@ import (
 	"github.com/pkg/errors"
 )
 
+// Watches represents a collection of Watch objects.
 type Watches struct {
 	XMLName xml.Name `xml:"watches"`
 	Watches []Watch  `xml:"watch"`
 }
 
+// Watch represents a watch on a specific repository.
 type Watch struct {
 	XMLName  xml.Name  `xml:"watch"`
 	URL      string    `xml:"url,attr"`
 	Commands []Command `xml:"command"`
 }
 
+// Update the watch using the provided collection of repositories. This will
+// also run any commands if changes are found.
 func (w Watch) Update(repositories *Repositories) error {
 	repo := repositories.ForURL(w.URL)
 
@@ -37,6 +41,8 @@ func (w Watch) Update(repositories *Repositories) error {
 	return nil
 }
 
+// UnmarshalXML unmarshals the watch from XML whilst providing some extra
+// validation.
 func (w *Watch) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	watch := struct {
 		URL      *string   `xml:"url,attr"`

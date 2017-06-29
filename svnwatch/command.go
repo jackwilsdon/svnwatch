@@ -12,12 +12,14 @@ import (
 	"github.com/pkg/errors"
 )
 
+// Command represents a command that is executed when a change is detected
 type Command struct {
 	XMLName      xml.Name `xml:"command"`
 	ArgumentType string   `xml:"argument-type,attr,omitempty"`
 	Command      string   `xml:",chardata"`
 }
 
+// Execute the command on the specified repository and revision.
 func (c Command) Execute(repo Repository, revision svn.Revision) error {
 	pieces, err := shellwords.Parse(c.Command)
 
@@ -51,6 +53,8 @@ func (c Command) Execute(repo Repository, revision svn.Revision) error {
 	return nil
 }
 
+// UnmarshalXML unmarshals the command from XML whilst providing some extra
+// validation.
 func (c *Command) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	cmd := struct {
 		ArgumentType *string `xml:"argument-type,attr,omitempty"`
