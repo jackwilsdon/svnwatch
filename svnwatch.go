@@ -18,7 +18,7 @@ func main() {
 
 	flag.Parse()
 
-	watcher, err := LoadWatcher(*configDir)
+	watcher, err := loadWatcher(*configDir)
 
 	if *interval < 0 {
 		fatalf("%s: invalid interval: %d", os.Args[0], *interval)
@@ -29,11 +29,11 @@ func main() {
 	}
 
 	for {
-		if err := watcher.Update(); err != nil {
+		if err := watcher.update(); err != nil {
 			fatalf(err)
 		}
 
-		if err := watcher.Save(*configDir); err != nil {
+		if err := watcher.save(*configDir); err != nil {
 			fatalf(err)
 		}
 

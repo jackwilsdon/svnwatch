@@ -8,12 +8,12 @@ import (
 	"github.com/pkg/errors"
 )
 
-type Watcher struct {
+type watcher struct {
 	Repositories svnwatch.Repositories
 	Watches      svnwatch.Watches
 }
 
-func (w Watcher) Save(directory string) error {
+func (w watcher) save(directory string) error {
 	if err := save(path.Join(directory, "repositories.xml"), w.Repositories); err != nil {
 		return errors.Wrap(err, "failed to save repositories")
 	}
@@ -21,7 +21,7 @@ func (w Watcher) Save(directory string) error {
 	return nil
 }
 
-func (w *Watcher) Update() error {
+func (w *watcher) update() error {
 	for _, watch := range w.Watches.Watches {
 		if err := watch.Update(&w.Repositories); err != nil {
 			return err
@@ -31,8 +31,8 @@ func (w *Watcher) Update() error {
 	return nil
 }
 
-func LoadWatcher(directory string) (*Watcher, error) {
-	watcher := Watcher{}
+func loadWatcher(directory string) (*watcher, error) {
+	watcher := watcher{}
 
 	repositories := path.Join(directory, "repositories.xml")
 
