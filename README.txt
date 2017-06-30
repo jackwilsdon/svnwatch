@@ -12,6 +12,6 @@ config:
     <watches>
       <watch url="http://svn.example.com">
         <command>./send_email</command>
-        <command argument-type="env">./send_slack</command>
+        <command type="env">./send_slack</command>
       </watch>
     </watches>
