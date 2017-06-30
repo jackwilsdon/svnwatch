@@ -12,7 +12,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-// Command represents a command that is executed when a change is detected
+// Command represents a command that is executed when a change is detected.
 type Command struct {
 	XMLName      xml.Name `xml:"command"`
 	ArgumentType string   `xml:"argument-type,attr,omitempty"`
