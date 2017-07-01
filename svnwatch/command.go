@@ -5,12 +5,30 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strconv"
+	"strings"
 
 	"github.com/jackwilsdon/svnwatch/svn"
 	shellwords "github.com/mattn/go-shellwords"
 	"github.com/pkg/errors"
 )
+
+var commandTypes = make(map[string]CommandType)
+
+// A CommandType is a method of passing data about a revision into a command.
+type CommandType func(cmd *exec.Cmd, repository Repository, revision svn.Revision) error
+
+// RegisterCommandType registers the specified command type under the name provided.
+func RegisterCommandType(name string, commandType CommandType) {
+	if commandType == nil {
+		panic(fmt.Sprintf("type \"%s\" is nil", name))
+	}
+
+	if _, registered := commandTypes[name]; registered {
+		panic(fmt.Sprintf("type \"%s\" is already registered", name))
+	}
+
+	commandTypes[name] = commandType
+}
 
 // Command represents a command that is executed when a change is detected.
 type Command struct {
@@ -34,16 +52,20 @@ func (command Command) Execute(repository Repository, revision svn.Revision) err
 	cmd := exec.Command(pieces[0], pieces[1:]...)
 	cmd.Env = os.Environ()
 
-	if command.Type == "normal" {
-		cmd.Args = append(cmd.Args, repository.URL, strconv.Itoa(revision.Revision))
-	} else if command.Type == "env" {
-		cmd.Env = append(
-			os.Environ(),
-			fmt.Sprintf("SVN_URL=%s", repository.URL),
-			fmt.Sprintf("SVN_REVISION=%d", revision.Revision),
-		)
-	} else {
-		return fmt.Errorf("invalid type \"%s\" for \"%s\"", command.Type, command.Command)
+	commandType, registered := commandTypes[command.Type]
+
+	if !registered {
+		keys := make([]string, 0, len(commandTypes))
+
+		for key := range commandTypes {
+			keys = append(keys, key)
+		}
+
+		return fmt.Errorf("invalid type \"%s\" for \"%s\" (supported types: %s)", command.Type, command.Command, strings.Join(keys, ", "))
+	}
+
+	if err := commandType(cmd, repository, revision); err != nil {
+		return errors.Wrapf(err, "failed to use command type \"%s\"", command.Type)
 	}
 
 	if err := cmd.Run(); err != nil {
@@ -66,11 +88,17 @@ func (command *Command) UnmarshalXML(decoder *xml.Decoder, start xml.StartElemen
 	}
 
 	if cmd.Type == nil {
-		command.Type = "normal"
-	} else if *cmd.Type == "normal" || *cmd.Type == "env" {
-		command.Type = *cmd.Type
-	} else {
-		return fmt.Errorf("invalid type \"%s\" for \"%s\"", *cmd.Type, cmd.Command)
+		return fmt.Errorf("missing type for \"%s\"", cmd.Command)
+	}
+
+	if _, registered := commandTypes[*cmd.Type]; !registered {
+		keys := make([]string, 0, len(commandTypes))
+
+		for key := range commandTypes {
+			keys = append(keys, key)
+		}
+
+		return fmt.Errorf("invalid type \"%s\" for \"%s\" (supported types: %s)", *cmd.Type, cmd.Command, strings.Join(keys, ", "))
 	}
 
 	command.Type = *cmd.Type

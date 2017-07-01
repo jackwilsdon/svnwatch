@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"time"
+
+	_ "github.com/jackwilsdon/svnwatch/svnwatch/types"
 )
 
 func fatalf(format interface{}, a ...interface{}) {
