@@ -5,7 +5,7 @@ usage:
   -config string
     the configuration directory for svnwatch (default "~/.svnwatch")
   -interval int
-    how often to check for updates (0 disables this and exits after a single check)
+    how often to check for updates (0 disables this and exits after a single check) (default 0)
 
 config:
   watches.xml:
