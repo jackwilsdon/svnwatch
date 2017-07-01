@@ -11,7 +11,7 @@ config:
   watches.xml:
     <watches>
       <watch url="http://svn.example.com">
-        <command>./send_email</command>
+        <command type="env">./send_email</command>
         <command type="env">./send_slack</command>
       </watch>
     </watches>
