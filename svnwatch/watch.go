@@ -43,13 +43,13 @@ func (w Watch) Update(repositories *Repositories) error {
 
 // UnmarshalXML unmarshals the watch from XML whilst providing some extra
 // validation.
-func (w *Watch) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+func (w *Watch) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
 	watch := struct {
 		URL      *string   `xml:"url,attr"`
 		Commands []Command `xml:"command"`
 	}{}
 
-	if err := d.DecodeElement(&watch, &start); err != nil {
+	if err := decoder.DecodeElement(&watch, &start); err != nil {
 		return err
 	}
 

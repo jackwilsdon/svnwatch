@@ -64,13 +64,13 @@ func (r *Repository) Update() ([]svn.Revision, error) {
 
 // UnmarshalXML unmarshals the repository from XML whilst providing some extra
 // validation.
-func (r *Repository) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+func (r *Repository) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
 	repo := struct {
 		URL      *string `xml:"url,attr"`
 		Revision *int    `xml:",chardata"`
 	}{}
 
-	if err := d.DecodeElement(&repo, &start); err != nil {
+	if err := decoder.DecodeElement(&repo, &start); err != nil {
 		return err
 	}
 
