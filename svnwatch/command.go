@@ -52,6 +52,8 @@ func (command Command) Execute(repository Repository, revision svn.Revision) err
 
 	cmd := exec.Command(pieces[0], pieces[1:]...)
 	cmd.Env = os.Environ()
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 
 	commandType, registered := commandTypes[command.Type]
 
