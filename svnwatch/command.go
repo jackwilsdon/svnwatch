@@ -7,9 +7,10 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/jackwilsdon/svnwatch/svn"
 	shellwords "github.com/mattn/go-shellwords"
 	"github.com/pkg/errors"
+
+	"github.com/jackwilsdon/svnwatch/svn"
 )
 
 var commandTypes = make(map[string]CommandType)

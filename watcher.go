@@ -4,8 +4,9 @@ import (
 	"os"
 	"path"
 
-	"github.com/jackwilsdon/svnwatch/svnwatch"
 	"github.com/pkg/errors"
+
+	"github.com/jackwilsdon/svnwatch/svnwatch"
 )
 
 type watcher struct {

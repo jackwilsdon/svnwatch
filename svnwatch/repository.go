@@ -3,8 +3,9 @@ package svnwatch
 import (
 	"encoding/xml"
 
-	"github.com/jackwilsdon/svnwatch/svn"
 	"github.com/pkg/errors"
+
+	"github.com/jackwilsdon/svnwatch/svn"
 )
 
 // Repositories represents a collection of Repository objects.
