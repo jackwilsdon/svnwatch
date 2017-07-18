@@ -6,7 +6,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/jackwilsdon/svnwatch/svnwatch"
+	"github.com/jackwilsdon/svnwatch"
 )
 
 type watcher struct {

@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	_ "github.com/jackwilsdon/svnwatch/svnwatch/types"
+	_ "github.com/jackwilsdon/svnwatch/types"
 )
 
 func fatalf(format interface{}, a ...interface{}) {

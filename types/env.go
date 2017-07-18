@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os/exec"
 
+	"github.com/jackwilsdon/svnwatch"
 	"github.com/jackwilsdon/svnwatch/svn"
-	"github.com/jackwilsdon/svnwatch/svnwatch"
 )
 
 func env(cmd *exec.Cmd, repository svnwatch.Repository, revision svn.Revision) error {
