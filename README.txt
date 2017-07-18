@@ -1,6 +1,9 @@
 svnwatch
   watcher for SVN repositories
 
+installing:
+  go get -u github.com/jackwilsdon/svnwatch
+
 usage:
   -config string
     the configuration directory for svnwatch (default "/etc/svnwatch")
