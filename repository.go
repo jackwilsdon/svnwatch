@@ -24,7 +24,7 @@ func (r *Repositories) ForURL(url string) *Repository {
 	}
 
 	r.Repositories = append(r.Repositories, Repository{
-		URL:      url,
+		URL: url,
 	})
 
 	return &r.Repositories[len(r.Repositories)-1]
