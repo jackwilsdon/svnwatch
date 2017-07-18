@@ -2,7 +2,7 @@ svnwatch
   watcher for SVN repositories
 
 installing:
-  go get -u github.com/jackwilsdon/svnwatch
+  go get -u github.com/jackwilsdon/svnwatch/cmd/svnwatch
 
 usage:
   -config string
