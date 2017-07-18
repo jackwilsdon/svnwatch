@@ -36,6 +36,7 @@ type Repository struct {
 	XMLName  xml.Name `xml:"repository"`
 	URL      string   `xml:"url,attr"`
 	Revision int      `xml:",chardata"`
+	Updated  bool     `xml:"updated,attr"`
 }
 
 // Update the repository and return any new revisions.
@@ -47,6 +48,7 @@ func (r *Repository) Update() ([]svn.Revision, error) {
 	}
 
 	originalRevision := r.Revision
+	originalUpdated := r.Updated
 
 	for _, revision := range revisions {
 		if revision.Revision > r.Revision {
@@ -54,13 +56,18 @@ func (r *Repository) Update() ([]svn.Revision, error) {
 		}
 	}
 
-	// If it's our first update /or/ the revision hasn't changed then return nothing
-	if originalRevision == 0 || r.Revision == originalRevision {
+	r.Updated = true
+
+	// If the revision hasn't changed or we hadn't updated this repository before, ignore the changes
+	if r.Revision == originalRevision || !originalUpdated {
 		return nil, nil
 	}
 
-	// Return everything but the first revision, as that is the revision we passed to GetLogRange
-	return revisions[1:], nil
+	if originalRevision > 0 {
+		return revisions[1:], nil
+	}
+
+	return revisions, nil
 }
 
 // UnmarshalXML unmarshals the repository from XML whilst providing some extra
@@ -69,6 +76,7 @@ func (r *Repository) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) 
 	repo := struct {
 		URL      *string `xml:"url,attr"`
 		Revision *int    `xml:",chardata"`
+		Updated  bool    `xml:"updated,attr"`
 	}{}
 
 	if err := decoder.DecodeElement(&repo, &start); err != nil {
@@ -85,6 +93,7 @@ func (r *Repository) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) 
 
 	r.URL = *repo.URL
 	r.Revision = *repo.Revision
+	r.Updated = repo.Updated
 
 	return nil
 }
